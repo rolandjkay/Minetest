@@ -32,8 +32,6 @@ local function rotate_and_place(itemstack, placer, pointed_thing)
     local placer_pos = placer:getpos()
     if placer_pos then
         param2 = minetest.dir_to_facedir(vector.subtract(p1, placer_pos))
-        minetest.chat_send_all(p0.x .. ",".. p0.y .. "," .. p0.z)
-        minetest.chat_send_all(p1.x .. ",".. p1.y .. "," .. p1.z)
     end
 
     local finepos = minetest.pointed_thing_to_face_pos(placer, pointed_thing)
@@ -109,4 +107,5 @@ register_corner("stone")
 register_corner("stone_brick")
 register_corner("straw", "farming_straw")
 register_corner("wooden", "default_wood")
+
 
