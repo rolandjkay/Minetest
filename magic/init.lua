@@ -6,7 +6,7 @@
 --    |       | 2
 --    +-----------> X
 --
-local beacon_base = {
+local tower = {
   {
     {".", "c", "."},
     {"c", "c", "c"},
@@ -67,6 +67,20 @@ function string:split(sep)
    return fields
 end
 
+local block_codes = {
+  c = "default:cobble",
+  cw = "walls:cobble",
+  sb = "default:stonebrick",
+  sbs = "stairs:stair_stonebrick",
+  jw = "default:junglewood",
+  jws = "stairs:stair_junglewood",
+  jwf = "default:fence_junglewood",
+  jwc = "corners:jungle_wood",
+  w = "default:wood",
+  t = "default:tree",
+  mpl = "default:mese_post_light",
+}
+
 local interpret_block_code = function(code)
   local fields = string.split(code, ":")
   return { type = fields[1], orientation = fields[2]}
@@ -74,62 +88,34 @@ end
 
 local lookup_block_name = function(code_str)
   local code = interpret_block_code(code_str)
+  local block_name = block_codes[code["type"]]
 
-  if code["type"] == "c" then
-    return "default:cobble"
-  elseif code["type"] == "cw" then
-    return "walls:cobble"
-  elseif code["type"] == "sb" then
-    return "default:stonebrick"
-  elseif code["type"] == "sbs" then
-    return "stairs:stair_stonebrick"
-  elseif code["type"] == "jw" then
-    return "default:junglewood"
-  elseif code["type"] == "jws" then
-    return "stairs:stair_junglewood"
-  elseif code["type"] == "jwf" then
-    return "default:fence_junglewood"
-  elseif code["type"] == "jwc" then
-    return "corners:jungle_wood"
-  elseif code["type"] == "w" then
-    return "default:wood"
-  elseif code["type"] == "t" then
-    return "default:tree"
-  elseif code["type"] == "mpl" then
-    return "default:mese_post_light"
-  else
-    return "default:unknown"
-  end
+  return block_name == nil and "default:unknown" or block_name
 end
+
+local orientation_codes = {
+  -- Codes for stars
+  s = 0,
+  n = 2,
+  e = 3,
+  w = 1,
+  -- Codes for corners
+  ne = 0,
+  nw = 3,
+  se = 1,
+  sw = 2
+}
 
 local lookup_facedir = function(code_str)
   local code = interpret_block_code(code_str)
-
-  if code["orientation"] == "s" then
-    return 0
-  elseif code["orientation"] == "n" then
-    return 2
-  elseif code["orientation"] == "e" then
-    return 3
-  elseif code["orientation"] == "w" then
-    return 1
-  elseif code["orientation"] == "ne" then
-    return 0
-  elseif code["orientation"] == "nw" then
-    return 3
-  elseif code["orientation"] == "se" then
-    return 1
-  elseif code["orientation"] == "sw" then
-    return 2
-  else
-    return 0
-  end
+  local orientation = orientation_codes[code["orientation"]]
+  return orientation == nil and 0 or orientation
 end
 
 minetest.after(5, function()
   local level_index = 0
 
-  for _, level in ipairs(beacon_base) do
+  for _, level in ipairs(tower) do
 
     -- Handle optional 'repeat_count'
     local repeat_count = 1
