@@ -112,7 +112,7 @@ local lookup_facedir = function(code_str)
   return orientation == nil and 0 or orientation
 end
 
-minetest.after(5, function()
+local create_tower = function(position)
   local level_index = 0
 
   for _, level in ipairs(tower) do
@@ -129,7 +129,9 @@ minetest.after(5, function()
       for row_index, row in ipairs(level) do
         for column_index, block_str in ipairs(row) do
           if block_str ~= "." then
-            minetest.add_node({x = 325 + column_index, y = 3 + level_index, z = 4 - row_index},
+            minetest.add_node({x = position.x + column_index,
+                               y = position.y + level_index,
+                               z = position.z - row_index},
                               { name = lookup_block_name(block_str),
                                 param2 = lookup_facedir(block_str)
                               }
@@ -139,4 +141,45 @@ minetest.after(5, function()
       end
     end
   end
-end)
+end
+
+-- minetest.after(5, function()
+--   local level_index = 0
+--
+--   for _, level in ipairs(tower) do
+--
+--     -- Handle optional 'repeat_count'
+--     local repeat_count = 1
+--     if level["repeat_count"] ~= nil then repeat_count = level["repeat_count"] end
+--     if level["data"] ~= nil then level = level["data"] end
+--
+--     -- Loop for each copy
+--     for level_copy_index = 1,repeat_count do
+--       level_index = level_index + 1
+--
+--       for row_index, row in ipairs(level) do
+--         for column_index, block_str in ipairs(row) do
+--           if block_str ~= "." then
+--             minetest.add_node({x = 325 + column_index, y = 3 + level_index, z = 4 - row_index},
+--                               { name = lookup_block_name(block_str),
+--                                 param2 = lookup_facedir(block_str)
+--                               }
+--                              )
+--           end
+--         end
+--       end
+--     end
+--   end
+-- end)
+
+minetest.register_node("magic:hat", {
+    description = "Magician's Hat",
+    groups = {cracky = 3},
+    sounds = sound_stone,
+    tiles = {"default_leaves.png"},
+    drawtype = "normal",
+    on_rightclick = function(pos, node, player, itemstack, pointed_thing)
+      minetest.chat_send_all("Hello World!")
+      create_tower({x = pos.x, y = pos.y - 1, z = pos.z})
+    end
+})
