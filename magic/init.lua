@@ -176,17 +176,12 @@ local create_object = function(position, object_data)
     -- Check for offsets; this is mainly used to allow buildings to have
     -- foundations or cellars underground.
     if level["offset"] ~= nil then
-      minetest.chat_send_all("FOO")
-
       for _, ordinate in ipairs({"x","y","z"}) do
-        minetest.chat_send_all("BAR" .. ordinate)
-
         if level["offset"][ordinate] ~= nil then
            offset[ordinate] = offset[ordinate] + level["offset"][ordinate]
          end
       end
     end
-    minetest.chat_send_all(tostring(offset["y"]))
 
     -- The actual data might be nested in a 'data' node.
     if level["data"] ~= nil then level = level["data"] end
