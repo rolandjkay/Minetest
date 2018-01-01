@@ -195,7 +195,7 @@ local create_object = function(position, object_data)
           if block_str ~= "." then
             minetest.add_node({x = position.x + offset["x"] + column_index,
                                y = position.y + offset["y"] + level_index,
-                               z = position.z - offset["z"] + row_index},
+                               z = position.z + offset["z"] + row_index},
                               { name = lookup_block_name(block_str),
                                 param2 = lookup_facedir(block_str)
                               }
